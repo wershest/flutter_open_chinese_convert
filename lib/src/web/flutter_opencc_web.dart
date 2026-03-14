@@ -1,19 +1,18 @@
-@JS('OpenCC')
-
 import 'dart:async';
 import 'dart:js_interop';
 
 import 'package:flutter/services.dart';
-import 'package:flutter_open_chinese_convert/flutter_open_chinese_convert_platform_interface.dart';
-import 'package:flutter_open_chinese_convert/src/web/option_pair.dart';
+
 import 'package:flutter_web_plugins/flutter_web_plugins.dart';
 import 'package:web/web.dart';
 
-@JS()
+import '../../flutter_open_chinese_convert_platform_interface.dart';
+import 'option_pair.dart';
+
+@JS('OpenCC.Converter')
 external JSFunction Converter(JSAny options);
 
 class FlutterOpenccWeb extends FlutterOpenChineseConvertPlatform {
-
   FlutterOpenccWeb();
 
   static void registerWith(Registrar registrar) {
@@ -27,10 +26,10 @@ class FlutterOpenccWeb extends FlutterOpenChineseConvertPlatform {
     switch (call.method) {
       case 'convert':
         return _convert(
-          call.arguments[0], //text
-          call.arguments[1], //option
-          call.arguments[3] //ignore unimplemented simplified idioms
-        );
+            call.arguments[0], //text
+            call.arguments[1], //option
+            call.arguments[3] //ignore unimplemented simplified idioms
+            );
     }
   }
 
@@ -38,22 +37,18 @@ class FlutterOpenccWeb extends FlutterOpenChineseConvertPlatform {
     OptionPair options;
     await loadLibrary();
 
-    if (option == 'tw2sp'){
-      ignoreSp ? options = OptionPair.tw2s : throw UnimplementedError(
-          "Simplified idioms are not supported by OpenCC-JS. Set webIgnoreMissingIdioms when calling convert() to suppress this error."
-      );
+    if (option == 'tw2sp') {
+      ignoreSp
+          ? options = OptionPair.tw2s
+          : throw UnimplementedError(
+              "Simplified idioms are not supported by OpenCC-JS. Set webIgnoreMissingIdioms when calling convert() to suppress this error.");
     } else {
       options = OptionPair.optionMap[option]!;
     }
 
-    JSFunction converterInstance = Converter({
-      "to":  options.to,
-      "from": options.from
-    }.jsify()!);
-    JSAny? result = converterInstance.callAsFunction(
-        null,
-        text.toJS
-    );
+    JSFunction converterInstance =
+        Converter({"to": options.to, "from": options.from}.jsify()!);
+    JSAny? result = converterInstance.callAsFunction(null, text.toJS);
     return (result as JSString).toDart;
   }
 
@@ -63,7 +58,8 @@ class FlutterOpenccWeb extends FlutterOpenChineseConvertPlatform {
       return;
     }
 
-    final scriptUrl = "https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/full.js";
+    final scriptUrl =
+        "https://cdn.jsdelivr.net/npm/opencc-js@1.0.5/dist/umd/full.js";
     final completer = Completer<void>();
 
     final script = HTMLScriptElement()

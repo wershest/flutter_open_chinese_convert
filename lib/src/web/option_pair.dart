@@ -1,16 +1,13 @@
-enum OptionPair{
-  s2t(from:'cn', to:'t'),
-  t2s(from:'t', to:'cn'),
-  s2hk(from:'cn',to:'hk'),
-  hk2s(from:'hk', to:'cn'),
-  s2tw(from:'cn', to:'tw'),
-  tw2s(from:'tw', to:'cn'),
-  s2twp(from:'cn', to:'twp');
+enum OptionPair {
+  s2t(from: 'cn', to: 't'),
+  t2s(from: 't', to: 'cn'),
+  s2hk(from: 'cn', to: 'hk'),
+  hk2s(from: 'hk', to: 'cn'),
+  s2tw(from: 'cn', to: 'tw'),
+  tw2s(from: 'tw', to: 'cn'),
+  s2twp(from: 'cn', to: 'twp');
 
-  const OptionPair({
-    required this.from,
-    required this.to
-  });
+  const OptionPair({required this.from, required this.to});
 
   final String from;
   final String to;

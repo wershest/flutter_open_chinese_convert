@@ -39,18 +39,10 @@ class ChineseConverter {
   /// UnimplementedError if using the sp option.
   /// You can pass the [webIgnoreMissingIdioms] parameter to ignore the missing
   /// idioms and run the conversion using the standard simplified dictionary.
-  static Future<String> convert(
-    String text,
-    ConverterOption option, {
-        bool inBackground = false,
-        bool webIgnoreMissingIdioms = false
-  }) async {
-    final String result = await _channel.invokeMethod('convert', [
-      text,
-      option.id,
-      inBackground,
-      webIgnoreMissingIdioms
-    ]);
+  static Future<String> convert(String text, ConverterOption option,
+      {bool inBackground = false, bool webIgnoreMissingIdioms = false}) async {
+    final String result = await _channel.invokeMethod(
+        'convert', [text, option.id, inBackground, webIgnoreMissingIdioms]);
     return result;
   }
 }
