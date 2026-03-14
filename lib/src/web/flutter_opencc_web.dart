@@ -9,12 +9,22 @@ import 'package:web/web.dart';
 import '../../flutter_open_chinese_convert_platform_interface.dart';
 import 'option_pair.dart';
 
+/// Creates an OpenCC converter instance from the given [options] object.
+///
+/// This calls the `OpenCC.Converter` JavaScript constructor, which returns a
+/// function that accepts a string and produces the converted output.
 @JS('OpenCC.Converter')
 external JSFunction Converter(JSAny options);
 
+/// The web implementation of [FlutterOpenChineseConvertPlatform].
+///
+/// Uses the [opencc-js](https://github.com/nk2028/opencc-js) library loaded
+/// from a CDN to perform Chinese text conversion in the browser.
 class FlutterOpenccWeb extends FlutterOpenChineseConvertPlatform {
+  /// Creates a new instance of [FlutterOpenccWeb].
   FlutterOpenccWeb();
 
+  /// Registers this class as the platform implementation for the web.
   static void registerWith(Registrar registrar) {
     final MethodChannel channel = MethodChannel(
         "flutter_open_chinese_convert", const StandardMethodCodec(), registrar);
@@ -22,6 +32,10 @@ class FlutterOpenccWeb extends FlutterOpenChineseConvertPlatform {
     channel.setMethodCallHandler(instance.handleMethodCall);
   }
 
+  /// Handles incoming method calls from the Flutter framework.
+  ///
+  /// Supports the `convert` method with arguments `[text, option,
+  /// inBackground, webIgnoreMissingIdioms]`.
   Future<dynamic> handleMethodCall(MethodCall call) async {
     switch (call.method) {
       case 'convert':
@@ -52,6 +66,12 @@ class FlutterOpenccWeb extends FlutterOpenChineseConvertPlatform {
     return (result as JSString).toDart;
   }
 
+  /// Dynamically loads the opencc-js library from a CDN into the page if it
+  /// has not already been loaded.
+  ///
+  /// Appends a `<script>` element to `document.head` and waits for it to
+  /// finish loading before resolving.  Subsequent calls are no-ops when the
+  /// script element is already present.
   Future<void> loadLibrary() async {
     final String scriptId = 'flutter-open-chinese-convert';
     if (document.querySelector('script#$scriptId') != null) {

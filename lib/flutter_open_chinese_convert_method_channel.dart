@@ -10,6 +10,7 @@ class MethodChannelFlutterOpenChineseConvert
   @visibleForTesting
   final methodChannel = const MethodChannel('flutter_open_chinese_convert');
 
+  /// Returns the current platform version string, or `null` if unavailable.
   @override
   Future<String?> getPlatformVersion() async {
     final version = await methodChannel.invokeMethod<String>(

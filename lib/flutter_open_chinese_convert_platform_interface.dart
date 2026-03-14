@@ -2,6 +2,11 @@ import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
 import 'flutter_open_chinese_convert_method_channel.dart';
 
+/// The interface that platform-specific implementations of this plugin must
+/// implement.
+///
+/// Platform implementations should extend this class rather than implement it,
+/// to avoid breaking changes when new methods are added.
 abstract class FlutterOpenChineseConvertPlatform extends PlatformInterface {
   /// Constructs a FlutterOpenChineseConvertPlatform.
   FlutterOpenChineseConvertPlatform() : super(token: _token);
@@ -24,6 +29,7 @@ abstract class FlutterOpenChineseConvertPlatform extends PlatformInterface {
     _instance = instance;
   }
 
+  /// Returns the current platform version string, or `null` if unavailable.
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
