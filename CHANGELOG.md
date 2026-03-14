@@ -1,3 +1,7 @@
+## 0.9.0
+
+- Fixes Android build issues with Flutter 3.35+.
+
 ## 0.7.0
 
 - **BREAKING**: Updates minimum Flutter version requirement to 3.24.0.
