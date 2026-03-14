@@ -10,15 +10,14 @@ dependencies:
     sdk: flutter
   flutter_web_plugins:
     sdk: flutter
-  plugin_platform_interface: any
-  web: any
+  plugin_platform_interface: ^2.1.8
+  web: ^1.1.1
 dev_dependencies:
   flutter_lints: any
   flutter_test:
     sdk: flutter
   import_sorter: "^4.6.0"
   pubspec_dependency_sorter: "^1.0.4"
-  plugin_platform_interface: any
 flutter:
   plugin:
     platforms:

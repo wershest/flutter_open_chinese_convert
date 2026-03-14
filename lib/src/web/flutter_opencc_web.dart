@@ -1,5 +1,4 @@
 @JS('OpenCC')
-library flutter_open_chinese_convert;
 
 import 'dart:async';
 import 'dart:js_interop';
