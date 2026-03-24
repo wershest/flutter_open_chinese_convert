@@ -1,14 +1,10 @@
 import 'dart:async';
 
-import 'package:flutter/services.dart';
-
+import '../flutter_open_chinese_convert_platform_interface.dart';
 import 'options.dart';
 
 /// The Chinese converter.
 class ChineseConverter {
-  static const MethodChannel _channel = MethodChannel(
-    'flutter_open_chinese_convert',
-  );
   static final List<ConverterOption> _options = [
     S2T(),
     T2S(),
@@ -41,8 +37,51 @@ class ChineseConverter {
   /// idioms and run the conversion using the standard simplified dictionary.
   static Future<String> convert(String text, ConverterOption option,
       {bool inBackground = false, bool webIgnoreMissingIdioms = false}) async {
-    final String result = await _channel.invokeMethod(
-        'convert', [text, option.id, inBackground, webIgnoreMissingIdioms]);
-    return result;
+    return FlutterOpenChineseConvertPlatform.instance.convert(
+      text,
+      option.id,
+      inBackground: inBackground,
+      webIgnoreMissingIdioms: webIgnoreMissingIdioms,
+    );
+  }
+}
+
+/// A reusable converter session that avoids reinitializing native converters.
+class ChineseConverterSession {
+  ChineseConverterSession._(this._sessionId, this._option);
+
+  final int _sessionId;
+  final ConverterOption _option;
+  bool _disposed = false;
+
+  /// Creates a reusable converter session for [option].
+  static Future<ChineseConverterSession> create(
+    ConverterOption option, {
+    bool inBackground = false,
+  }) async {
+    final sessionId = await FlutterOpenChineseConvertPlatform.instance
+        .initSession(option.id, inBackground: inBackground);
+    return ChineseConverterSession._(sessionId, option);
+  }
+
+  /// Converts [text] using the initialized session.
+  Future<String> convert(String text) async {
+    if (_disposed) {
+      throw StateError('ChineseConverterSession has been disposed.');
+    }
+    return FlutterOpenChineseConvertPlatform.instance
+        .convertWithSession(_sessionId, text);
+  }
+
+  /// The option associated with this session.
+  ConverterOption get option => _option;
+
+  /// Disposes the session and releases associated native resources.
+  Future<void> dispose() async {
+    if (_disposed) {
+      return;
+    }
+    _disposed = true;
+    await FlutterOpenChineseConvertPlatform.instance.disposeSession(_sessionId);
   }
 }

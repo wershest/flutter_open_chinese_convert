@@ -33,4 +33,35 @@ abstract class FlutterOpenChineseConvertPlatform extends PlatformInterface {
   Future<String?> getPlatformVersion() {
     throw UnimplementedError('platformVersion() has not been implemented.');
   }
+
+  /// Converts [text] using conversion [optionId].
+  Future<String> convert(
+    String text,
+    String optionId, {
+    bool inBackground = false,
+    bool webIgnoreMissingIdioms = false,
+  }) {
+    throw UnimplementedError('convert() has not been implemented.');
+  }
+
+  /// Initializes a reusable converter session and returns its session id.
+  Future<int> initSession(
+    String optionId, {
+    bool inBackground = false,
+  }) {
+    throw UnimplementedError('initSession() has not been implemented.');
+  }
+
+  /// Converts [text] using an existing converter [sessionId].
+  Future<String> convertWithSession(
+    int sessionId,
+    String text,
+  ) {
+    throw UnimplementedError('convertWithSession() has not been implemented.');
+  }
+
+  /// Disposes an existing converter [sessionId].
+  Future<void> disposeSession(int sessionId) {
+    throw UnimplementedError('disposeSession() has not been implemented.');
+  }
 }

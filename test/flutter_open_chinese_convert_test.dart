@@ -9,6 +9,24 @@ class MockFlutterOpenChineseConvertPlatform
     implements FlutterOpenChineseConvertPlatform {
   @override
   Future<String?> getPlatformVersion() => Future.value('42');
+
+  @override
+  Future<String> convert(
+    String text,
+    String optionId, {
+    bool inBackground = false,
+    bool webIgnoreMissingIdioms = false,
+  }) async =>
+      text;
+
+  @override
+  Future<int> initSession(String optionId, {bool inBackground = false}) async => 1;
+
+  @override
+  Future<String> convertWithSession(int sessionId, String text) async => text;
+
+  @override
+  Future<void> disposeSession(int sessionId) async {}
 }
 
 void main() {
@@ -29,6 +47,9 @@ void main() {
         MockFlutterOpenChineseConvertPlatform();
     FlutterOpenChineseConvertPlatform.instance = fakePlatform;
 
-    expect(await FlutterOpenChineseConvertPlatform.instance.getPlatformVersion(), '42');
+    expect(
+      await FlutterOpenChineseConvertPlatform.instance.getPlatformVersion(),
+      '42',
+    );
   });
 }

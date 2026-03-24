@@ -40,6 +40,25 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+  Future<void> _batchConvert() async {
+    final option = ChineseConverter.allOptions[_index];
+    final texts = List<String>.generate(10, (i) => '[$i] $_original');
+    final results = <String>[];
+    ChineseConverterSession? session;
+    try {
+      session = await ChineseConverterSession.create(option, inBackground: true);
+      for (final text in texts) {
+        final converted = await session.convert(text);
+        results.add(converted);
+      }
+      setState(() => _converted = results.join('\n\n'));
+    } on PlatformException catch (e) {
+      setState(() => _converted = 'Batch convert failed: ${e.message ?? e.code}');
+    } finally {
+      await session?.dispose();
+    }
+  }
+
   @override
   Widget build(BuildContext context) => MaterialApp(
         home: Scaffold(
@@ -47,33 +66,42 @@ class _MyAppState extends State<MyApp> {
             title: const Row(children: <Widget>[Text('Open Chinese Convert')]),
           ),
           body: SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                buildMenu(context),
-                const Divider(),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Original:',
-                    style: Theme.of(context).textTheme.headlineLarge,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  buildMenu(context),
+                  const Divider(),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Original:',
+                      style: Theme.of(context).textTheme.headlineLarge,
+                    ),
                   ),
-                ),
-                Padding(
-                    padding: const EdgeInsets.all(8.0), child: Text(_original)),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    'Conveted:',
-                    style: Theme.of(context).textTheme.headlineLarge,
+                  Padding(
+                      padding: const EdgeInsets.all(8.0), child: Text(_original)),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      'Conveted:',
+                      style: Theme.of(context).textTheme.headlineLarge,
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(_converted),
-                ),
-              ],
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(_converted),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: ElevatedButton(
+                      onPressed: _batchConvert,
+                      child: const Text('批量转换'),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
