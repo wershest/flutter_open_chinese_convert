@@ -12,3 +12,4 @@ build/
 *.bak
 .build
 .swiftpm
+example/ios/.DerivedData/

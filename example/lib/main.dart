@@ -1,5 +1,6 @@
 // Flutter imports:
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // Package imports:
 import 'package:flutter_open_chinese_convert/flutter_open_chinese_convert.dart';
@@ -27,12 +28,16 @@ class _MyAppState extends State<MyApp> {
   Future<void> _convert() async {
     var text = _original;
     var option = ChineseConverter.allOptions[_index];
-    var result = await ChineseConverter.convert(
-      text,
-      option,
-      inBackground: true,
-    );
-    setState(() => _converted = result);
+    try {
+      var result = await ChineseConverter.convert(
+        text,
+        option,
+        inBackground: true,
+      );
+      setState(() => _converted = result);
+    } on PlatformException catch (e) {
+      setState(() => _converted = 'Convert failed: ${e.message ?? e.code}');
+    }
   }
 
   @override
@@ -66,7 +71,7 @@ class _MyAppState extends State<MyApp> {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: Text(_converted ?? ''),
+                  child: Text(_converted),
                 ),
               ],
             ),

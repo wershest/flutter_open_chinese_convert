@@ -26,6 +26,8 @@ flutter:
         pluginClass: FlutterOpenccPlugin
       ios:
         pluginClass: FlutterOpenChineseConvertPlugin
+      macos:
+        pluginClass: FlutterOpenChineseConvertPlugin
       web:
         pluginClass: FlutterOpenccWeb
         fileName: src/web/flutter_opencc_web.dart
